@@ -1,5 +1,4 @@
 package map;
-
 import beeper.Beeper;
 import robot.Robot;
 import wall.Wall;
@@ -7,19 +6,17 @@ import wall.Wall;
 import java.util.ArrayList;
 
 public class Map {
-    public ArrayList<Wall> walls = new ArrayList<>();
-    public ArrayList<Beeper> beepers = new ArrayList<>();
-    public Robot robot;
+    private ArrayList<Wall> walls = new ArrayList<>();
+    private ArrayList<Beeper> beepers = new ArrayList<>();
+    private Robot myRobot;
     private int width;
     private int height;
 
     public Map() {
 
     }
-
-    public Map(int width_dimension, int height_dimension) {
-        this.width = width_dimension;
-        this.height = height_dimension;
+    public Robot getMyRobot(){
+        return this.myRobot;
     }
 
     public void setWidth(int width) {
@@ -54,16 +51,134 @@ public class Map {
         return true;
     }
 
-    public void add_robot(Robot robot) {
-        this.robot = robot;
+    public Boolean findWall(int positionx, int positiony) {
+        ArrayList<Wall> single_wall = new ArrayList<>();
+        for (int i = 0; i < walls.size(); i++) {
+            Wall actualWall = this.walls.get(i);
+            if (actualWall.getPositionX() == positionx && actualWall.getPositionY() == positiony) {
+                single_wall.add(actualWall);
+            }
+        }
+        if (single_wall.isEmpty()) {
+            return false;
+        }
+        return true;
     }
-    //hacer un verificador que permita saber si la posición del robot en x o y mas o menos 1 según la posición se encuentra
-    //la posición de alguna de las paredes del mapa y que devuelva 1 si es una pared, que revise en el mapa si es una
-    //de beepers y si si, que le informe al usuario. y devuelva 2 y si es un espacio en blanco que devuelva 0
-    //también que verifique si no se pasa de la longitud y amplitud del mapa
-    //para cuando toque la instruccion pick, verificar que las posiciones en x y y del robot y del beeper sean los mismos
-    // y llamar a la función de restar beepers  del beeper y a la de aumentar del robto.
+
+    public Beeper findBeeper(int positionx, int positiony) {
+
+        ArrayList<Beeper> single_beeper = new ArrayList<>();
+        for (int i = 0; i < beepers.size(); i++) {
+            Beeper actualBeeper = this.beepers.get(i);
+            if (actualBeeper.getPositionX() == positionx && actualBeeper.getPositionY() == positiony) {
+                single_beeper.add(actualBeeper);
+            }
+        }
+        if (single_beeper.isEmpty()) {
+            return null;
+        }
+        return single_beeper.get(0);
+    }
+
+    public boolean canPickBeeper() {
+        Beeper beeper = findBeeper(this.myRobot.getPositionX(), this.myRobot.getPositionY()); {
+            if (beeper != null) {
+                for (int i = 0; i < beepers.size(); i++) {
+                    if (beepers.get(i).getPositionX() == beeper.getPositionX() && beepers.get(i).getPositionY() == beeper.getPositionY()) {
+                        beepers.get(i).rest_beepers_picked();
+                        if (beepers.get(i).getNumber_of_beepers() == 0) {
+                            beepers.remove(i);
+                        }
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+    }
+
+    public boolean canMoveForward() {
+        int desiredPositionX = this.myRobot.getPositionX();
+        int desiredPositionY = this.myRobot.getPositionY();
+
+        if (this.myRobot.getDirection()==0) {
+            desiredPositionY = this.myRobot.getPositionY() - 1;
+        }
+        else if (this.myRobot.getDirection()==1){
+            desiredPositionX += 1;
+        }
+        else if (this.myRobot.getDirection()==2){
+            desiredPositionY = this.myRobot.getPositionY() + 1;
+        }
+        else if (this.myRobot.getDirection()==3) {
+            desiredPositionX = this.myRobot.getPositionX() - 1;
+        }
+
+        if (desiredPositionY == height || desiredPositionY == -1 || desiredPositionX == width || desiredPositionX == -1) {
+            return false;
+        }
+        for (Wall wall : walls) {
+            if (wall.getPositionX() == desiredPositionX && wall.getPositionY() == desiredPositionY) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 
+    public void add_robot(Robot robot) {
+        this.myRobot = robot;
+    }
+
+    private Beeper getBeepersInUbication(int positionx, int positiony){
+        return beepers.stream()
+                .filter(beeper -> beeper.getPositionX()==positionx && beeper.getPositionY() == positiony)
+                .findAny()
+                .orElse(null);
+    }
+    private boolean VerifyRobotInPosition(int positionx, int positiony){
+        return myRobot.getPositionX() == positionx && myRobot.getPositionY() == positiony;
+    }
+
+    private boolean VerifyWallInPosition(int positionx, int positiony){
+        return walls.stream()
+                .filter(wall -> wall.getPositionX()==positionx && wall.getPositionY()==positiony)
+                .count()>0;
+    }
+    public Integer getNumberOfWalls(){
+        return this.walls.size();
+    }
+    public Integer getNumberOfBeepers(){
+        return this.beepers.size();
+    }
+
+    @Override
+    public String toString() {
+        String actualMapState = "";
+        for (int y=0; y<this.height; y++){
+            for (int x=0; x<this.width; x++){
+                Beeper beeperByUbication = getBeepersInUbication(x, y);
+                boolean IsAWall = VerifyWallInPosition(x, y);
+                boolean IsARobot = VerifyRobotInPosition(x,y);
+                if (IsAWall){
+                    actualMapState += "*";
+                }
+                else if (IsARobot){
+                    actualMapState += myRobot;
+                }
+                else if (getBeepersInUbication(x, y)!= null){
+                    actualMapState += String.valueOf(beeperByUbication.getNumber_of_beepers());
+                }
+                else {
+                    actualMapState += " ";
+                }
+            }
+            actualMapState += "\n";
+        }
+        return actualMapState;
+
+    }
 }
+
 

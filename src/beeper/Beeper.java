@@ -9,6 +9,7 @@ public class Beeper {
         this.positionX = positionx;
         this.PositionY = positiony;
         this.number_of_beepers = count_of_beepers;
+
     }
     public void rest_beepers_picked() {
             this.number_of_beepers -= 1;
@@ -25,4 +26,6 @@ public class Beeper {
     public int getPositionY() {
         return PositionY;
     }
+
 }
+

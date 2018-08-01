@@ -1,4 +1,8 @@
+
 package robot;
+
+import beeper.Beeper;
+import map.Map;
 
 public class Robot {
     private int positionX;
@@ -9,36 +13,34 @@ public class Robot {
     public Robot(int positionx, int positiony, String initial_direction){
         this.positionX = positionx;
         this.positionY = positiony;
-        if (initial_direction=="^"){
+        if (initial_direction.equals("^")){
             this.direction = 0;
         }
-        else if (initial_direction==">"){
+        else if (initial_direction.equals(">")){
             this.direction = 1;
         }
-        else if (initial_direction=="v"){
+        else if (initial_direction.equals("v")){
             this.direction = 2;
         }
-        else if (initial_direction=="<"){
+        else if (initial_direction.equals("<")){
             this.direction = 3;
         }
     }
 
-    public void move_in_x() {
+    public void moveForward() {
         if (direction==1){
             this.positionX += 1;
         }
-        else {
+        else if (direction==3){
             this.positionX -= 1;
         }
-
-    }
-    public void move_in_y() {
-        if (direction==0){
-            this.positionY += 1;
-        }
-        else {
+        else if (direction==0){
             this.positionY -= 1;
         }
+        else if (direction==2){
+            this.positionY += 1;
+        }
+
 
     }
     public int getPositionX() {
@@ -56,30 +58,42 @@ public class Robot {
 
 
     public void upgrade_Number_Beepers() {
-        this.number_Beepers +=1;
+        if (this.number_Beepers<9){
+            this.number_Beepers += 1;
+        }
+
     }
 
     public int getDirection() {
         return direction;
     }
 
+
     public void change_Direction() {
-        this.direction += 1;
+        if (this.direction<3){this.direction += 1;}
+        else this.direction = 0;
+
+
     }
+
+
+
+
+
 
     @Override
     public String toString() {
+        String robot = "";
         int direction = this.getDirection();
-        switch (direction){
-            case 0:
-                return "^";
-            case 1:
-                return ">";
-            case 2:
-                return "v";
-            case 3:
-                return "<";
+        if (this.direction == 0) {
+            robot = "^";
+        } else if (this.direction == 1) {
+            robot = ">";
+        } else if (this.direction == 2) {
+            robot = "v";
+        } else if (this.direction == 3) {
+            robot = "<";
         }
-        return super.toString();
+        return robot;
     }
 }
