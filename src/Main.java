@@ -1,8 +1,8 @@
+import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -10,15 +10,28 @@ import beeper.Beeper;
 import map.Map;
 import robot.Robot;
 import wall.Wall;
+
 public class Main {
+    private static String chooseAndGetFilePath(String fileName){
+        FileDialog dialog = new FileDialog((Frame)null, "Choose " + fileName + " to open");
+        dialog.setMode(FileDialog.LOAD);
+        dialog.setVisible(true);
+        String file =  (dialog.getDirectory()+dialog.getFile()).replace("\\", "/");
+        System.out.println(file + " elegido.");
+
+        return file;
+
+    }
+
     public static void main (String[] args) {
+
+
         System.out.println("WELCOME TO RURPLE \n" + "The objective is to complete the map by picking all the beepers"+
                 "\n"+ "The game ends once you pick all beepers or if the instructions you uploaded are donde. " );
         Map myMap = new Map();
-        Scanner reader = new Scanner(System.in);
-        System.out.println("Please enter the complete root of your .txt file without spaces to upload a map:\n" +"" +
-                "format example: C:/Users/xxx/Desktop/map.txt");
-        String mapRoot = reader.next();
+        System.out.println("Please enter the root to your map file");
+        String mapRoot = chooseAndGetFilePath("mapa");
+        System.out.println(mapRoot);
         try{
         Stream<String> lines = Files.lines(
                 Paths.get(mapRoot),
@@ -91,10 +104,8 @@ public class Main {
         int counter = 0;
         if (myMap.getCanConstruct()){
             ArrayList<String> instructions = new ArrayList<>();
-            Scanner reader2 = new Scanner(System.in);
-            System.out.println("Please enter the complete root of your .txt instructions file without spaces to upload a set of instructions:\n" +"" +
-                    "format example: C:/xxx/xxx/xxx/instructions.txt");
-            String instructionsRoot = reader2.next();
+            System.out.println("Please enter the root to your instructions file");
+            String instructionsRoot = chooseAndGetFilePath("instructions");
             try{
                 Stream<String> lines = Files.lines(
                         Paths.get(instructionsRoot),
