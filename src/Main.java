@@ -56,13 +56,18 @@ public class Main {
                         break;
                     }
                     default:
-                        int number = Integer.parseInt(substring);
-                        if (number > 0) {
-                            Beeper mybeeper = new Beeper(column, row, number);
-                            myMap.add_beepers(mybeeper);
+                        try {
+                            int number = Integer.parseInt(substring);
+                            if (number > 0) {
+                                Beeper mybeeper = new Beeper(column, row, number);
+                                myMap.add_beepers(mybeeper);
+
+                            }
+                        } catch (NumberFormatException ex){
+                            myMap.denyCanConstruct();
+                            System.out.println("'"+substring+"' was found in map and is not a supported character , Only numbers<9, zeros(spaces) and '*'(walls) are allowed in the map.");
                         }
                         break;
-
                 }
                 myMap.setHeight(row+1);
                 myMap.setWidth(column + 1);
@@ -70,6 +75,7 @@ public class Main {
             for(int i = 1; i < linesLength.size(); i++) {
                 if (!linesLength.get(i).equals(linesLength.get(0))) {
                     myMap.denyCanConstruct();
+
                 }
             }
         });
@@ -77,7 +83,7 @@ public class Main {
             if (myMap.getCanConstruct()){
                 System.out.println("Your Map has been compiled and transformed. Here's Your Map: ");
                 System.out.println(myMap);
-            } else System.out.println("Only 9 beepers or less are allowed per position!");
+            }
 
         } catch (IOException exception){
             System.out.println("Error, Specified root does not have a valid extension or does not contain a map file. ");
@@ -115,6 +121,8 @@ public class Main {
                             if (myMap.canPickBeeper()){
                                 myMap.getMyRobot().upgrade_Number_Beepers();
                                 System.out.println("Robot picked a beeper, actual quantity of beepers: "+ myMap.getMyRobot().getNumberOfBeepers());
+                            } else{
+                                System.out.println("There is no beeper to pick in specified position.");
                             }
 
                     }
@@ -124,12 +132,9 @@ public class Main {
                 if (myMap.getNumberOfBeepers()==0){
                     System.out.println("Robot has picked all the beepers!");
                 }
-            System.out.println(myMap);
-
         } else {
-            System.out.println("Impossible to construct Map from root : " + mapRoot+ "  due to overload of beepers per position (>9)");
+            System.out.println("Impossible to construct Map from root : " + mapRoot+ "  due to overload of beepers per position (>9)\nor invalid character in map");
         }
-
     }
 }
 
