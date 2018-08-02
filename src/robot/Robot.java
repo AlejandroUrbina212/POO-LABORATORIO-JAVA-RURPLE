@@ -1,8 +1,6 @@
 
 package robot;
 
-import beeper.Beeper;
-import map.Map;
 
 public class Robot {
     private int positionX;
@@ -58,10 +56,7 @@ public class Robot {
 
 
     public void upgrade_Number_Beepers() {
-        if (this.number_Beepers<9){
             this.number_Beepers += 1;
-        }
-
     }
 
     public int getDirection() {
@@ -84,7 +79,6 @@ public class Robot {
     @Override
     public String toString() {
         String robot = "";
-        int direction = this.getDirection();
         if (this.direction == 0) {
             robot = "^";
         } else if (this.direction == 1) {

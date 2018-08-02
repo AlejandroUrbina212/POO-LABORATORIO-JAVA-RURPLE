@@ -11,9 +11,16 @@ public class Map {
     private Robot myRobot;
     private int width;
     private int height;
+    private boolean canConstruct = true;
 
     public Map() {
 
+    }
+    public boolean getCanConstruct(){
+        return this.canConstruct;
+    }
+    public void denyCanConstruct(){
+        this.canConstruct=false;
     }
     public Robot getMyRobot(){
         return this.myRobot;
@@ -27,49 +34,25 @@ public class Map {
         this.height = height;
     }
 
-    public int getWidth() {
-        return width;
-    }
 
-    public int getHeight() {
-        return height;
-    }
-
-    public boolean add_wall(Wall wall) {
+    public void add_wall(Wall wall) {
         if (this.walls.contains(wall)) {
-            return false;
+            return;
         }
         this.walls.add(wall);
-        return true;
     }
 
-    public boolean add_beepers(Beeper beeper) {
+    public void add_beepers(Beeper beeper) {
         if (this.beepers.contains(beeper)) {
-            return false;
+            return;
         }
         this.beepers.add(beeper);
-        return true;
     }
 
-    public Boolean findWall(int positionx, int positiony) {
-        ArrayList<Wall> single_wall = new ArrayList<>();
-        for (int i = 0; i < walls.size(); i++) {
-            Wall actualWall = this.walls.get(i);
-            if (actualWall.getPositionX() == positionx && actualWall.getPositionY() == positiony) {
-                single_wall.add(actualWall);
-            }
-        }
-        if (single_wall.isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    public Beeper findBeeper(int positionx, int positiony) {
+    private Beeper findBeeper(int positionx, int positiony) {
 
         ArrayList<Beeper> single_beeper = new ArrayList<>();
-        for (int i = 0; i < beepers.size(); i++) {
-            Beeper actualBeeper = this.beepers.get(i);
+        for (Beeper actualBeeper : beepers) {
             if (actualBeeper.getPositionX() == positionx && actualBeeper.getPositionY() == positiony) {
                 single_beeper.add(actualBeeper);
             }
@@ -142,41 +125,37 @@ public class Map {
     }
 
     private boolean VerifyWallInPosition(int positionx, int positiony){
-        return walls.stream()
-                .filter(wall -> wall.getPositionX()==positionx && wall.getPositionY()==positiony)
-                .count()>0;
+        return walls.stream().anyMatch(wall -> wall.getPositionX() == positionx && wall.getPositionY() == positiony);
     }
-    public Integer getNumberOfWalls(){
-        return this.walls.size();
-    }
+
     public Integer getNumberOfBeepers(){
         return this.beepers.size();
     }
 
     @Override
     public String toString() {
-        String actualMapState = "";
+        StringBuilder actualMapState = new StringBuilder();
         for (int y=0; y<this.height; y++){
             for (int x=0; x<this.width; x++){
                 Beeper beeperByUbication = getBeepersInUbication(x, y);
                 boolean IsAWall = VerifyWallInPosition(x, y);
                 boolean IsARobot = VerifyRobotInPosition(x,y);
                 if (IsAWall){
-                    actualMapState += "*";
+                    actualMapState.append("*");
                 }
                 else if (IsARobot){
-                    actualMapState += myRobot;
+                    actualMapState.append(myRobot);
                 }
                 else if (getBeepersInUbication(x, y)!= null){
-                    actualMapState += String.valueOf(beeperByUbication.getNumber_of_beepers());
+                    actualMapState.append(String.valueOf(beeperByUbication.getNumber_of_beepers()));
                 }
                 else {
-                    actualMapState += " ";
+                    actualMapState.append(" ");
                 }
             }
-            actualMapState += "\n";
+            actualMapState.append("\n");
         }
-        return actualMapState;
+        return actualMapState.toString();
 
     }
 }
