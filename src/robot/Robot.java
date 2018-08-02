@@ -1,26 +1,23 @@
-
 package robot;
-
-
 public class Robot {
     private int positionX;
     private int positionY;
-    private int number_Beepers = 0;
+    private int numberOfBeepers = 0;
     private int direction = 0;
 
-    public Robot(int positionx, int positiony, String initial_direction){
+    public Robot(int positionx, int positiony, String StartDirection){
         this.positionX = positionx;
         this.positionY = positiony;
-        if (initial_direction.equals("^")){
+        if (StartDirection.equals("^")){
             this.direction = 0;
         }
-        else if (initial_direction.equals(">")){
+        else if (StartDirection.equals(">")){
             this.direction = 1;
         }
-        else if (initial_direction.equals("v")){
+        else if (StartDirection.equals("v")){
             this.direction = 2;
         }
-        else if (initial_direction.equals("<")){
+        else if (StartDirection.equals("<")){
             this.direction = 3;
         }
     }
@@ -50,13 +47,13 @@ public class Robot {
 
 
 
-    public int getNumber_Beepers() {
-        return number_Beepers;
+    public int getNumberOfBeepers() {
+        return numberOfBeepers;
     }
 
 
     public void upgrade_Number_Beepers() {
-            this.number_Beepers += 1;
+            this.numberOfBeepers += 1;
     }
 
     public int getDirection() {
@@ -64,17 +61,12 @@ public class Robot {
     }
 
 
-    public void change_Direction() {
+    public void changeDir() {
         if (this.direction<3){this.direction += 1;}
         else this.direction = 0;
 
 
     }
-
-
-
-
-
 
     @Override
     public String toString() {

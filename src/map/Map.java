@@ -12,7 +12,6 @@ public class Map {
     private int width;
     private int height;
     private boolean canConstruct = true;
-
     public Map() {
 
     }
@@ -50,7 +49,6 @@ public class Map {
     }
 
     private Beeper findBeeper(int positionx, int positiony) {
-
         ArrayList<Beeper> single_beeper = new ArrayList<>();
         for (Beeper actualBeeper : beepers) {
             if (actualBeeper.getPositionX() == positionx && actualBeeper.getPositionY() == positiony) {
@@ -68,8 +66,8 @@ public class Map {
             if (beeper != null) {
                 for (int i = 0; i < beepers.size(); i++) {
                     if (beepers.get(i).getPositionX() == beeper.getPositionX() && beepers.get(i).getPositionY() == beeper.getPositionY()) {
-                        beepers.get(i).rest_beepers_picked();
-                        if (beepers.get(i).getNumber_of_beepers() == 0) {
+                        beepers.get(i).restBeepersPicked();
+                        if (beepers.get(i).getNumberOfBeepers() == 0) {
                             beepers.remove(i);
                         }
                     }
@@ -120,11 +118,11 @@ public class Map {
                 .findAny()
                 .orElse(null);
     }
-    private boolean VerifyRobotInPosition(int positionx, int positiony){
+    private boolean verifyRobotInPosition(int positionx, int positiony){
         return myRobot.getPositionX() == positionx && myRobot.getPositionY() == positiony;
     }
 
-    private boolean VerifyWallInPosition(int positionx, int positiony){
+    private boolean verifyWallInPosition(int positionx, int positiony){
         return walls.stream().anyMatch(wall -> wall.getPositionX() == positionx && wall.getPositionY() == positiony);
     }
 
@@ -138,8 +136,8 @@ public class Map {
         for (int y=0; y<this.height; y++){
             for (int x=0; x<this.width; x++){
                 Beeper beeperByUbication = getBeepersInUbication(x, y);
-                boolean IsAWall = VerifyWallInPosition(x, y);
-                boolean IsARobot = VerifyRobotInPosition(x,y);
+                boolean IsAWall = verifyWallInPosition(x, y);
+                boolean IsARobot = verifyRobotInPosition(x,y);
                 if (IsAWall){
                     actualMapState.append("*");
                 }
@@ -147,7 +145,7 @@ public class Map {
                     actualMapState.append(myRobot);
                 }
                 else if (getBeepersInUbication(x, y)!= null){
-                    actualMapState.append(String.valueOf(beeperByUbication.getNumber_of_beepers()));
+                    actualMapState.append(String.valueOf(beeperByUbication.getNumberOfBeepers()));
                 }
                 else {
                     actualMapState.append(" ");

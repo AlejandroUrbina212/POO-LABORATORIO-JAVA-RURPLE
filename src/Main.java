@@ -99,7 +99,7 @@ public class Main {
             }
             do{
                     if (instructions.get(counter).equals("ROTATE")){
-                        myMap.getMyRobot().change_Direction();
+                        myMap.getMyRobot().changeDir();
                         System.out.println("Robot changed orientation to: "+ myMap.getMyRobot().toString());
                     }
                     else if (instructions.get(counter).equals("MOVE")) {
@@ -114,7 +114,7 @@ public class Main {
 
                             if (myMap.canPickBeeper()){
                                 myMap.getMyRobot().upgrade_Number_Beepers();
-                                System.out.println("Robot picked a beeper, actual quantity of beepers: "+ myMap.getMyRobot().getNumber_Beepers());
+                                System.out.println("Robot picked a beeper, actual quantity of beepers: "+ myMap.getMyRobot().getNumberOfBeepers());
                             }
 
                     }
